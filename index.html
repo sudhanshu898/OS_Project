@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Replacement Algorithm Simulator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Page Replacement Algorithm Simulator</h1>
+        
+        <div class="input-section">
+            <div class="input-group">
+                <label for="frameCount">Enter Number of Frames</label>
+                <input type="number" id="frameCount" value="3">
+            </div>
+            <div class="input-group">
+                <label for="pageSequence">Enter The Page Sequence</label>
+                <input type="text" id="pageSequence" placeholder="e.g. 1,2,3,4">
+            </div>
+            <div class="button-group">
+                <button onclick="runFCFS()">FCFS</button>
+                <button onclick="runOPR()">OPR</button>
+                <button onclick="runLRU()">LRU</button>
+                <button onclick="runMRU()">MRU</button>
+                <button onclick="resetSimulation()">Reset</button>
+            </div>
+        </div>
+
+        <div id="results" class="hidden">
+            <h2 id="algorithmTitle"></h2>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr id="tableHeader">
+                            <th>PAGES</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="results-grid">
+                <div class="summary-section">
+                    <h3>Summary</h3>
+                    <div id="summary"></div>
+                </div>
+                
+                <div class="chart-section">
+                    <h3>Statistics</h3>
+                    <canvas id="resultChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
