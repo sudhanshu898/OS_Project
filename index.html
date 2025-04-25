@@ -3,60 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page Replacement Algorithm Simulator</title>
+    <title>Advanced Page Replacement Algorithm Simulator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Page Replacement Algorithm Simulator</h1>
+        <header class="header">
+            <h1><i class="fas fa-memory"></i> Page Replacement Algorithm Simulator</h1>
+            <p class="subtitle">Visualize and compare different page replacement strategies</p>
+        </header>
         
         <div class="input-section">
-            <div class="input-group">
-                <label for="frameCount">Enter Number of Frames</label>
-                <input type="number" id="frameCount" value="3">
+            <div class="input-grid">
+                <div class="input-group">
+                    <label for="frameCount"><i class="fas fa-layer-group"></i> Number of Frames</label>
+                    <input type="number" id="frameCount" min="1" max="10" value="3">
+                    <div class="range-container">
+                        <input type="range" id="frameRange" min="1" max="10" value="3">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="pageSequence"><i class="fas fa-list-ol"></i> Page Sequence</label>
+                    <input type="text" id="pageSequence" placeholder="e.g. 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5">
+                    <div class="sequence-actions">
+                        <button id="randomSequence" class="small-btn"><i class="fas fa-random"></i> Random</button>
+                        <button id="clearSequence" class="small-btn"><i class="fas fa-trash"></i> Clear</button>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="sequenceLength"><i class="fas fa-ruler-horizontal"></i> Sequence Length (for random)</label>
+                    <input type="number" id="sequenceLength" min="5" max="20" value="10">
+                </div>
             </div>
-            <div class="input-group">
-                <label for="pageSequence">Enter The Page Sequence</label>
-                <input type="text" id="pageSequence" placeholder="e.g. 1,2,3,4">
-            </div>
-            <div class="button-group">
-                <button onclick="runFCFS()">FCFS</button>
-                <button onclick="runOPR()">OPR</button>
-                <button onclick="runLRU()">LRU</button>
-                <button onclick="runMRU()">MRU</button>
-                <button onclick="resetSimulation()">Reset</button>
+
+            <div class="algorithm-selection">
+                <h3><i class="fas fa-project-diagram"></i> Select Algorithms</h3>
+                <div class="algorithm-buttons">
+                    <button onclick="runFCFS()" class="algo-btn" data-algo="FCFS">
+                        <i class="fas fa-clock"></i> FCFS
+                    </button>
+                    <button onclick="runOPR()" class="algo-btn" data-algo="OPR">
+                        <i class="fas fa-crystal-ball"></i> OPR
+                    </button>
+                    <button onclick="runLRU()" class="algo-btn" data-algo="LRU">
+                        <i class="fas fa-history"></i> LRU
+                    </button>
+                    <button onclick="runMRU()" class="algo-btn" data-algo="MRU">
+                        <i class="fas fa-stopwatch"></i> MRU
+                    </button>
+                    <button onclick="runAllAlgorithms()" class="algo-btn highlight">
+                        <i class="fas fa-rocket"></i> Run All
+                    </button>
+                </div>
             </div>
         </div>
 
         <div id="results" class="hidden">
-            <h2 id="algorithmTitle"></h2>
-
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr id="tableHeader">
-                            <th>PAGES</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody">
-                    </tbody>
-                </table>
+            <div class="results-header">
+                <h2 id="algorithmTitle"></h2>
+                <button onclick="resetSimulation()" class="reset-btn">
+                    <i class="fas fa-redo"></i> Reset
+                </button>
             </div>
 
-            <div class="results-grid">
-                <div class="summary-section">
-                    <h3>Summary</h3>
-                    <div id="summary"></div>
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="visualization">Visualization</button>
+                <button class="tab-btn" data-tab="comparison">Comparison</button>
+                <button class="tab-btn" data-tab="statistics">Statistics</button>
+            </div>
+
+            <div class="tab-content active" id="visualization">
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr id="tableHeader">
+                                <th>PAGES</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                        </tbody>
+                    </table>
                 </div>
-                
-                <div class="chart-section">
-                    <h3>Statistics</h3>
-                    <canvas id="resultChart"></canvas>
+            </div>
+
+            <div class="tab-content" id="comparison">
+                <div class="chart-container">
+                    <canvas id="comparisonChart"></canvas>
+                </div>
+                <div class="algorithm-comparison">
+                    <table id="comparisonTable">
+                        <thead>
+                            <tr>
+                                <th>Algorithm</th>
+                                <th>Page Hits</th>
+                                <th>Page Faults</th>
+                                <th>Hit Ratio</th>
+                                <th>Fault Ratio</th>
+                            </tr>
+                        </thead>
+                        <tbody id="comparisonBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="tab-content" id="statistics">
+                <div class="stats-grid">
+                    <div class="summary-section">
+                        <h3><i class="fas fa-info-circle"></i> Summary</h3>
+                        <div id="summary"></div>
+                    </div>
+                    
+                    <div class="chart-section">
+                        <h3><i class="fas fa-chart-pie"></i> Hit/Fault Distribution</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="resultChart"></canvas>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <div class="info-section">
+            <div class="info-card">
+                <h3><i class="fas fa-lightbulb"></i> About Page Replacement</h3>
+                <p>Imagine a small desk with only a few slots for books, but you need to study many. When you want to add a new book and the desk is full, you must remove one. <span class="tooltip">Page replacement<span class="tooltiptext">The process of choosing which page in memory to remove when new data is needed.</span></span> in operating systems works similarly: it decides which <span class="tooltip">page<span class="tooltiptext">A fixed-size block of data in memory.</span></span> (data block) to remove from limited <span class="tooltip">frames<span class="tooltiptext">Memory slots that hold pages.</span></span> (memory slots) to make room for a new one. This simulator lets you test four strategies:</p>
+                <ul class="algorithm-list">
+                    <li><span class="algo-name">FCFS (First-Come, First-Served)</span>: Removes the page that arrived first, like a queue. It’s straightforward but may evict useful pages, causing more <span class="tooltip">faults<span class="tooltiptext">When a needed page isn’t in memory, requiring a replacement.</span></span>.</li>
+                    <li><span class="algo-name">OPR (Optimal Page Replacement)</span>: Predicts and removes the page you won’t need for the longest time. It’s perfect in theory but requires knowing the future, making it unrealistic.</li>
+                    <li><span class="algo-name">LRU (Least Recently Used)</span>: Evicts the page you haven’t touched in a while, betting that recent pages are more likely to be reused. It’s practical and often effective.</li>
+                    <li><span class="algo-name">MRU (Most Recently Used)</span>: Removes the page you just used, assuming it’s done its job. It’s rare but works in cases where recent pages are less relevant.</li>
+                </ul>
+                <p>Try different page sequences and frame counts in the simulator to see how these algorithms perform, balancing speed, accuracy, and complexity!</p>
+            </div>
+            <div class="info-card">
+                <h3><i class="fas fa-question-circle"></i> How to Use</h3>
+                <ol>
+                    <li>Set the number of frames (memory slots)</li>
+                    <li>Enter or generate a page reference sequence</li>
+                    <li>Select algorithms to run (or click "Run All")</li>
+                    <li>Explore results in different tabs</li>
+                </ol>
+            </div>
+        </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
